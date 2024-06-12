@@ -1,0 +1,105 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=test
+Group=www-data
+WorkingDirectory=/home/mamyralieva582/blog_api
+ExecStart= /home/mamyralieva582/.cache/pypoetry/virtualenvs/p--WyNTXYw-py3.8/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/mamyralieva582/blog_api/blog_api.sock config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+/home/mamyralieva582/.cache/pypoetry/virtualenvs/blog-api-KRezXpYD-py3.10/bin/gunicorn
+
+
+
+
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/mamyralieva582/blog_api
+ExecStart= /home/mamyralieva582/blog_api/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/mamyralieva582/blog_api/blog_api.sock config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+server {
+    listen 80;
+    server_name 35.193.72.148;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/ {
+        root /home/mamyralieva582/blog_api;
+    }
+
+    location /media/ {
+        root /home/mamyralieva582/blog_api;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/mamyralieva582/blog_api/project.sock;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/blog_api /etc/nginx/sites-enabled
+
+
+server {
+    listen 80;
+    server_name 34.136.76.243;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/mamyralieva582/blog_api;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+
+
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=mamyralieva582
+Group=www-data
+WorkingDirectory=/home/mamyralieva582/blog_api
+ExecStart= /home/mamyralieva582/.cache/pypoetry/virtualenvs/blog-api-KRezXpYD-py3.10/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/mamyralieva582/blog_api/blog_api.sock config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+server {
+    listen 80;
+    server_name 34.136.76.243;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/ {
+        root /home/mamyralieva582/blog_api;
+    }
+
+    location /media/ {
+        root /home/mamyralieva582/blog_api;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/mamyralieva582/blog_api/blog_api.sock;
+    }
+}
